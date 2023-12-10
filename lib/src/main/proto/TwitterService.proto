@@ -1,0 +1,21 @@
+syntax = "proto3";
+//option java_multiple_files = true;
+package srpr.grpc.twitter;
+
+message Twit {
+  string message = 1;
+}
+
+message TwitGetRequest {
+  int32 count = 1;
+}
+
+message TwitItem {
+  string message = 1;
+  int64 timestamp = 2;
+}
+
+service TwitterService {
+  rpc addTwit(Twit) returns (TwitItem);
+  rpc getTwits(TwitGetRequest) returns (stream TwitItem);
+}

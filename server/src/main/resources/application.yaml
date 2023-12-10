@@ -1,0 +1,8 @@
+grpc:
+  server:
+    port: 8080
+spring:
+  data:
+    mongodb:
+      authentication-database: admin
+      uri: mongodb://twitter:twitter@localhost:27017/twitter
