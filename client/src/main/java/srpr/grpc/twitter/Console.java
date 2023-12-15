@@ -2,29 +2,32 @@ package srpr.grpc.twitter;
 
 import srpr.grpc.twitter.TwitterServiceOuterClass.TwitItem;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.Date;
 
-import static java.lang.System.console;
 import static java.lang.System.out;
 
 public record Console(GrpcClient client) {
+    private static final BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         out.println("Welcome to Twitter Console");
         out.print("Provide server url: ");
-        var url = console().readLine();
+        var url = in.readLine();
         try (var client = new GrpcClient(url)) {
             new Console(client).loop();
         }
     }
 
-    private void loop() {
+    private void loop() throws IOException {
         while (true) {
             out.println("Type:");
             out.println("\t/r - to receive last twits.");
             out.println("\t/w - to write a new twit.");
             out.println("\t/q - to exit.");
-            var cmd = console().readLine();
+            var cmd = in.readLine();
             if (cmd.toLowerCase().startsWith("/r")) receive();
             else if (cmd.startsWith("/w")) write();
             else if (cmd.startsWith("/q")) break;
@@ -32,9 +35,9 @@ public record Console(GrpcClient client) {
         }
     }
 
-    private void receive() {
+    private void receive() throws IOException {
         out.print("How many twits to fetch? [1, 10] ");
-        var answer = console().readLine();
+        var answer = in.readLine();
         final int count;
         try {
             count = Integer.parseInt(answer);
@@ -48,9 +51,9 @@ public record Console(GrpcClient client) {
         out.println(size == 0 ? "No twits available" : "Available twits: " + size + "/" + count);
     }
 
-    private void write() {
+    private void write() throws IOException {
         out.println("Type your twit, please: ");
-        var msg = console().readLine();
+        var msg = in.readLine();
         if (msg.isBlank()) {
             out.println("Empty message - not send");
             return;

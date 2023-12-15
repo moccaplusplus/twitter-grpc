@@ -5,6 +5,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import srpr.grpc.twitter.TwitterServiceOuterClass.Twit;
 import srpr.grpc.twitter.TwitterServiceOuterClass.TwitItem;
 
@@ -16,6 +17,7 @@ import java.util.List;
 public class StorageService {
     private final MongoTemplate mongoTemplate;
 
+    @Transactional
     public TwitItem storeTwit(Twit twit) {
         var doc = toDoc(twit);
         doc.setTimestamp(Instant.now().toEpochMilli());
@@ -23,6 +25,7 @@ public class StorageService {
         return fromDoc(doc);
     }
 
+    @Transactional(readOnly = true)
     public List<TwitItem> getLastTwits(int count) {
         var query = new Query();
         query.with(Sort.sort(TwitDoc.class).by(TwitDoc::getTimestamp).descending());
