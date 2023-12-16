@@ -1,4 +1,5 @@
 db = db.getSiblingDB("twitter");
+db.createCollection("user");
 db.createCollection("twit");
 db.createUser(
   {

@@ -1,6 +1,9 @@
 grpc:
   server:
     port: 8080
+keycloak:
+  key-url: http://localhost:8082/realms/twitter
+  key: MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAzqHP+3GZw/+3YyN1z4NRLIeDC5XQX4XE50FTwLQnpqW1iEpash9pZuqTNB2kIRC5Hb1y9ORWRrq/LrTXbaqDPn6gZiNud9qEXF7gJ+TK+LOlsAZfBldVrpDn49oONig1QILRXS8F0fNxnuNcDWzcyBLL73VEuIhCU/ttXcPVgT5Xp/hPesNuWAbDuBmwqdk4lcITK+bYcuGHGqejr2DxFkWfdKLCSJgx+cd2FPd6evwOGfMIafM6FaPQeuyvUexrYJ6+1zywCMD23CBMq80YO6psis5gumLDU6pitAnal+EPNjaS/0dJnvtjNG9y+GDlg4qaJUqO3q7eEba1MxHh4wIDAQAB
 spring:
   data:
     mongodb:

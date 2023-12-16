@@ -1,23 +1,44 @@
 package srpr.grpc.twitter;
 
+import io.grpc.CallCredentials;
 import srpr.grpc.twitter.TwitterServiceOuterClass.TwitItem;
 
+import javax.naming.AuthenticationException;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.URI;
 import java.util.Date;
 
 import static java.lang.System.out;
+import static srpr.grpc.twitter.Config.CONFIG;
 
 public record Console(GrpcClient client) {
     private static final BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
+    private static final Keycloak keycloak = new Keycloak(URI.create(CONFIG.keycloakUrl()), CONFIG.keycloakClientId());
 
     public static void main(String[] args) throws IOException {
         out.println("Welcome to Twitter Console");
-        out.print("Provide server url: ");
-        var url = in.readLine();
-        try (var client = new GrpcClient(url)) {
+        var host = CONFIG.serverHost();
+        var port = CONFIG.serverPort();
+        out.println("Server: " + host + ":" + port);
+        var credentials = login();
+        try (var client = new GrpcClient(host, port, credentials)) {
             new Console(client).loop();
+        }
+    }
+
+    private static CallCredentials login() throws IOException {
+        while (true) {
+            out.print("Login: ");
+            var login = in.readLine();
+            out.print("Passwd: ");
+            var passwd = in.readLine();
+            try {
+                return keycloak.login(login, passwd);
+            } catch (AuthenticationException e) {
+                out.println(e.getMessage());
+            }
         }
     }
 
@@ -45,10 +66,16 @@ public record Console(GrpcClient client) {
             out.println(e.getMessage());
             return;
         }
+
         var twits = client.get(count);
-        var size = twits.peek(this::printTwit).count();
-        out.println("---");
-        out.println(size == 0 ? "No twits available" : "Available twits: " + size + "/" + count);
+        if (twits.isEmpty()) {
+            out.println("---");
+            out.println("No twits available");
+        } else {
+            twits.forEach(this::printTwit);
+            out.println("---");
+            out.println("Available twits: " + twits.size() + "/" + count);
+        }
     }
 
     private void write() throws IOException {
@@ -70,6 +97,7 @@ public record Console(GrpcClient client) {
     private void printTwit(TwitItem twit) {
         out.println("---");
         out.println(twit.getMessage());
-        out.println("Added at: " + new Date(twit.getTimestamp()));
+        out.printf("Added by %s (%s) at: %s%n", twit.getAuthor().getName(),
+                twit.getAuthor().getEmail(), new Date(twit.getTimestamp()));
     }
 }
