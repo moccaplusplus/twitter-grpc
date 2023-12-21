@@ -1,9 +1,15 @@
 grpc:
   server:
     port: 8080
+keystore:
+  path: server.jks
+  pass: serverpass
+truststore:
+  path: trust.jks
+  pass: trustpass
 keycloak:
   key-url: http://localhost:8082/realms/twitter
-  key: MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAzqHP+3GZw/+3YyN1z4NRLIeDC5XQX4XE50FTwLQnpqW1iEpash9pZuqTNB2kIRC5Hb1y9ORWRrq/LrTXbaqDPn6gZiNud9qEXF7gJ+TK+LOlsAZfBldVrpDn49oONig1QILRXS8F0fNxnuNcDWzcyBLL73VEuIhCU/ttXcPVgT5Xp/hPesNuWAbDuBmwqdk4lcITK+bYcuGHGqejr2DxFkWfdKLCSJgx+cd2FPd6evwOGfMIafM6FaPQeuyvUexrYJ6+1zywCMD23CBMq80YO6psis5gumLDU6pitAnal+EPNjaS/0dJnvtjNG9y+GDlg4qaJUqO3q7eEba1MxHh4wIDAQAB
+  key: MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA2kCxpzr7BBvFtcjgDepVaKiO2j9Huy7a2AOEjjw6fdISBsQDNCmHlQ4k/1mnUIfxgJZMMMW5jy5Z+C7+kTtDk0p8bVRtcaNnEElN5ORQsW2gGAlx8ARQGgV1+6L2GAOE+2vB9T2bd3x+TbRKXPjjNTSLSah4OxMvaKbif88a0j+qY8Vc4d0T1ayJd517Qq8kDNLqwm5OK9KoJeRkluOBdh6dUcUlTv4eYelTRMZrzyHiLkG11d/Zeb6F+Q/4/8FGPVpgm5x1SPxhjjLTNkbnbD7oALrw7jMu8klqHyRqVNfm2S+tQeh/3VCDTQGNFMuExkEIteKToy4MitjFy/PP+QIDAQAB
 spring:
   data:
     mongodb:

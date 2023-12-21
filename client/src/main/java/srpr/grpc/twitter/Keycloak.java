@@ -12,6 +12,11 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpRequest.BodyPublisher;
 import java.net.http.HttpRequest.BodyPublishers;
 import java.net.http.HttpResponse.BodyHandlers;
+import java.security.KeyManagementException;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.UnrecoverableKeyException;
+import java.security.cert.CertificateException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Stream;
@@ -24,7 +29,15 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.stream.Collectors.joining;
 
 public record Keycloak(URI uri, String clientId) {
-    private static final HttpClient httpClient = HttpClient.newHttpClient();
+    private static final HttpClient httpClient;
+
+    static {
+        try {
+            httpClient = HttpClient.newBuilder().sslContext(Tls.sslContext()).build();
+        } catch (NoSuchAlgorithmException | KeyManagementException e) {
+            throw new ExceptionInInitializerError(e);
+        }
+    }
 
     public CallCredentials login(String login, String passwd) throws AuthenticationException {
         var params = new HashMap<String, String>();

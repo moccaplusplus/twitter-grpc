@@ -8,6 +8,10 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URI;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.UnrecoverableKeyException;
+import java.security.cert.CertificateException;
 import java.util.Date;
 
 import static java.lang.System.out;
@@ -17,29 +21,23 @@ public record Console(GrpcClient client) {
     private static final BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
     private static final Keycloak keycloak = new Keycloak(URI.create(CONFIG.keycloakUrl()), CONFIG.keycloakClientId());
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException, AuthenticationException {
         out.println("Welcome to Twitter Console");
         var host = CONFIG.serverHost();
         var port = CONFIG.serverPort();
         out.println("Server: " + host + ":" + port);
         var credentials = login();
-        try (var client = new GrpcClient(host, port, credentials)) {
+        try (var client = new GrpcClient(host, port, Tls.channelCredentials(), credentials)) {
             new Console(client).loop();
         }
     }
 
-    private static CallCredentials login() throws IOException {
-        while (true) {
-            out.print("Login: ");
-            var login = in.readLine();
-            out.print("Passwd: ");
-            var passwd = in.readLine();
-            try {
-                return keycloak.login(login, passwd);
-            } catch (AuthenticationException e) {
-                out.println(e.getMessage());
-            }
-        }
+    private static CallCredentials login() throws IOException, AuthenticationException {
+        out.print("Login: ");
+        var login = in.readLine();
+        out.print("Passwd: ");
+        var passwd = in.readLine();
+        return keycloak.login(login, passwd);
     }
 
     private void loop() throws IOException {

@@ -29,4 +29,20 @@ public class Config extends Properties {
     public int serverPort() {
         return Integer.parseInt(getProperty("server.port"));
     }
+
+    public String keystorePath() {
+        return getProperty("keystore.path");
+    }
+
+    public String keystorePass() {
+        return getProperty("keystore.pass");
+    }
+
+    public String truststorePath() {
+        return getProperty("truststore.path");
+    }
+
+    public String truststorePass() {
+        return getProperty("truststore.pass");
+    }
 }

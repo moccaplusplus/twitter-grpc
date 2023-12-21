@@ -21,7 +21,7 @@ public class StorageService {
     @Transactional
     public UserDoc saveUser(UserDoc user) {
         var doc = findUser(user.getName());
-        user.setId(doc.getId());
+        if (doc != null) user.setId(doc.getId());
         return mongoOperations.save(user);
     }
 

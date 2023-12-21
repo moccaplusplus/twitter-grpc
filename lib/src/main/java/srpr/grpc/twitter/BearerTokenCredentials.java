@@ -4,8 +4,8 @@ import io.grpc.CallCredentials;
 import io.grpc.Metadata;
 import io.grpc.Metadata.Key;
 import io.grpc.Status;
-import io.grpc.StatusException;
 
+import javax.security.auth.login.CredentialNotFoundException;
 import java.util.concurrent.Executor;
 
 import static io.grpc.Metadata.ASCII_STRING_MARSHALLER;
@@ -15,13 +15,13 @@ public class BearerTokenCredentials extends CallCredentials {
     public static final Key<String> METADATA_KEY = Key.of(AUTHORIZATION.toString(), ASCII_STRING_MARSHALLER);
     public static final String PREFIX = "Bearer ";
 
-    public static String extractToken(Metadata headers) {
+    public static String extractToken(Metadata headers) throws CredentialNotFoundException {
         var authHeader = headers.get(METADATA_KEY);
         if (authHeader == null) {
-            throw new NullPointerException("Authorization header is missing");
+            throw new CredentialNotFoundException("Authorization header is missing");
         }
         if (!authHeader.startsWith(PREFIX)) {
-            throw new IllegalStateException("Expected to start with prefix " + PREFIX);
+            throw new CredentialNotFoundException("Expected to start with prefix " + PREFIX);
         }
         return authHeader.substring(PREFIX.length());
     }
