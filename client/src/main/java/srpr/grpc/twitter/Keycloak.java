@@ -27,8 +27,11 @@ import static io.netty.handler.codec.http.HttpHeaderValues.APPLICATION_JSON;
 import static io.netty.handler.codec.http.HttpHeaderValues.APPLICATION_X_WWW_FORM_URLENCODED;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.stream.Collectors.joining;
+import static srpr.grpc.twitter.Config.CONFIG;
 
-public record Keycloak(URI uri, String clientId) {
+public record Keycloak(URI uri, String clientId, String clientSecret) {
+    public static final Keycloak DEFAULT = new Keycloak(
+            URI.create(CONFIG.keycloakUrl()), CONFIG.keycloakClientId(), CONFIG.keycloakClientSecret());
     private static final HttpClient httpClient;
 
     static {
@@ -42,6 +45,7 @@ public record Keycloak(URI uri, String clientId) {
     public CallCredentials login(String login, String passwd) throws AuthenticationException {
         var params = new HashMap<String, String>();
         params.put("client_id", clientId);
+        params.put("client_secret", clientSecret);
         params.put("grant_type", "password");
         params.put("username", login);
         params.put("password", passwd);

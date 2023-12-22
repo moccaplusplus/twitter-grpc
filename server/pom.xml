@@ -11,10 +11,6 @@
 
     <artifactId>server</artifactId>
 
-<!--
-    https://dev.to/fanmixco/how-to-run-docker-commands-in-cmdpowershell-from-docker-using-wsl2-5h65
--->
-
     <properties>
         <springboot.version>3.2.0</springboot.version>
     </properties>

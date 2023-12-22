@@ -1,6 +1,6 @@
 grpc:
   server:
-    port: 8080
+    port: 7443
 keystore:
   path: server.jks
   pass: serverpass

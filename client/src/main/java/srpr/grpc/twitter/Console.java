@@ -7,11 +7,6 @@ import javax.naming.AuthenticationException;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.net.URI;
-import java.security.KeyStoreException;
-import java.security.NoSuchAlgorithmException;
-import java.security.UnrecoverableKeyException;
-import java.security.cert.CertificateException;
 import java.util.Date;
 
 import static java.lang.System.out;
@@ -19,7 +14,6 @@ import static srpr.grpc.twitter.Config.CONFIG;
 
 public record Console(GrpcClient client) {
     private static final BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
-    private static final Keycloak keycloak = new Keycloak(URI.create(CONFIG.keycloakUrl()), CONFIG.keycloakClientId());
 
     public static void main(String[] args) throws IOException, AuthenticationException {
         out.println("Welcome to Twitter Console");
@@ -37,7 +31,7 @@ public record Console(GrpcClient client) {
         var login = in.readLine();
         out.print("Passwd: ");
         var passwd = in.readLine();
-        return keycloak.login(login, passwd);
+        return Keycloak.DEFAULT.login(login, passwd);
     }
 
     private void loop() throws IOException {

@@ -22,6 +22,10 @@ public class Config extends Properties {
         return getProperty("keycloak.client.id");
     }
 
+    public String keycloakClientSecret() {
+        return getProperty("keycloak.client.secret");
+    }
+
     public String serverHost() {
         return getProperty("server.host");
     }
