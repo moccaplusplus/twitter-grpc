@@ -3,6 +3,8 @@
 An implementation of a "mini-twitter" with use of gRPC. Just a showcase.
 Basic working version done.
 
+bin/kc.sh export --file twitter-realm.json --users realm_file --realm twitter
+
 ## TLS
 
 CA and trust store.

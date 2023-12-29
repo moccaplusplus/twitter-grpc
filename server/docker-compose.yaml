@@ -4,20 +4,27 @@ services:
     image: mongo
     restart: always
     ports:
-      - 27017:27017
+      - "27017:27017"
     environment:
       MONGO_INITDB_ROOT_USERNAME: mongo
       MONGO_INITDB_ROOT_PASSWORD: mongo
+    healthcheck:
+      test: echo 'db.runCommand("ping").ok'
+      interval: 10s
+      timeout: 10s
+      retries: 5
+      start_period: 40s
     volumes:
       - ./mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
 
   mongo-express:
     image: mongo-express
     depends_on:
-      - mongo
+      mongo:
+        condition: service_healthy
     restart: always
     ports:
-      - 8081:8081
+      - "8081:8081"
     environment:
       ME_CONFIG_BASICAUTH_USERNAME: mongo
       ME_CONFIG_BASICAUTH_PASSWORD: mongo
@@ -29,12 +36,13 @@ services:
     image: quay.io/keycloak/keycloak
     restart: always
     ports:
-      - 8443:8443
+      - "8443:8443"
     environment:
       KEYCLOAK_ADMIN: admin
       KEYCLOAK_ADMIN_PASSWORD: admin
     command:
       - start
+      - --optimized
       - --hostname=localhost
       - --http-enabled=false
       - --https-port=8443

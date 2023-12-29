@@ -1,0 +1,16 @@
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.VBox?>
+<fx:root type="javafx.scene.layout.VBox" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml">
+    <VBox>
+        <padding>
+            <Insets top="3" left="6" bottom="6" right="6"/>
+        </padding>
+        <TextField fx:id="twitContent" editable="false"
+                   style="-fx-font-size: 13px;-fx-background-color:transparent;-fx-background-insets: 0px;-fx-padding:0px;"/>
+        <TextField fx:id="twitFooter" editable="false"
+                   style="-fx-font-size: 10px;-fx-text-fill:#777;-fx-background-color:transparent;-fx-background-insets: 0px;-fx-padding:0px;"/>
+    </VBox>
+    <Separator/>
+</fx:root>

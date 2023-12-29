@@ -1,7 +1,9 @@
 package srpr.grpc.twitter;
 
-import io.grpc.CallCredentials;
-import io.grpc.internal.JsonParser;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import javax.naming.AuthenticationException;
 import java.io.IOException;
@@ -13,10 +15,8 @@ import java.net.http.HttpRequest.BodyPublisher;
 import java.net.http.HttpRequest.BodyPublishers;
 import java.net.http.HttpResponse.BodyHandlers;
 import java.security.KeyManagementException;
-import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
-import java.security.UnrecoverableKeyException;
-import java.security.cert.CertificateException;
+import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Stream;
@@ -30,6 +30,7 @@ import static java.util.stream.Collectors.joining;
 import static srpr.grpc.twitter.Config.CONFIG;
 
 public record Keycloak(URI uri, String clientId, String clientSecret) {
+    private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
     public static final Keycloak DEFAULT = new Keycloak(
             URI.create(CONFIG.keycloakUrl()), CONFIG.keycloakClientId(), CONFIG.keycloakClientSecret());
     private static final HttpClient httpClient;
@@ -42,7 +43,14 @@ public record Keycloak(URI uri, String clientId, String clientSecret) {
         }
     }
 
-    public CallCredentials login(String login, String passwd) throws AuthenticationException {
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    public record User(@JsonProperty("preferred_username") String username, String name, String email) {
+    }
+
+    public record Session(BearerTokenCredentials credentials, User user) {
+    }
+
+    public Session login(String login, String passwd) throws AuthenticationException {
         var params = new HashMap<String, String>();
         params.put("client_id", clientId);
         params.put("client_secret", clientSecret);
@@ -59,18 +67,29 @@ public record Keycloak(URI uri, String clientId, String clientSecret) {
         try {
             var response = httpClient.send(request, BodyHandlers.ofString());
             if (response.statusCode() >= 400) {
-                throw new AuthenticationException("Fail: " + response.body());
+                throw new AuthenticationException(response.body());
             }
-            return new BearerTokenCredentials(extractToken(response.body()));
+            var token = extractToken(response.body());
+            return new Session(new BearerTokenCredentials(token), parseTokenPayload(token));
         } catch (Exception e) {
             throw new AuthenticationException(e.getMessage());
         }
     }
 
-    @SuppressWarnings("rawtypes")
+    public User parseTokenPayload(String token) {
+        var chunks = token.split("\\.");
+        var decoder = Base64.getUrlDecoder();
+        var payload = new String(decoder.decode(chunks[1]));
+        try {
+            return OBJECT_MAPPER.readValue(payload, User.class);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     private static String extractToken(String authResponse) throws IOException {
-        var json = (Map) JsonParser.parse(authResponse);
-        return (String) json.get("access_token");
+        var tree = OBJECT_MAPPER.readTree(authResponse);
+        return tree.get("access_token").asText();
     }
 
     private static BodyPublisher toPostBody(Map<String, String> params) {
