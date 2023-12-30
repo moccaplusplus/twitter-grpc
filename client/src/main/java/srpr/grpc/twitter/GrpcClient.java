@@ -10,6 +10,7 @@ import srpr.grpc.twitter.TwitterServiceOuterClass.TwitGetRequest;
 import srpr.grpc.twitter.TwitterServiceOuterClass.TwitItem;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 public class GrpcClient implements AutoCloseable {
     private final ManagedChannel channel;
@@ -35,6 +36,11 @@ public class GrpcClient implements AutoCloseable {
 
     @Override
     public void close() {
-        channel.shutdown();
+        channel.shutdownNow();
+    }
+
+    public void closeAndWait(long timeout) throws InterruptedException {
+        channel.shutdownNow();
+        channel.awaitTermination(timeout, TimeUnit.MILLISECONDS);
     }
 }

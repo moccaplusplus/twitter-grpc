@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.util.Properties;
 
 public class Config extends Properties {
-    public static final Config CONFIG;
+    private static final Config CONFIG;
     static {
         CONFIG = new Config();
         try {
@@ -12,6 +12,10 @@ public class Config extends Properties {
         } catch (IOException e) {
             throw new ExceptionInInitializerError(e);
         }
+    }
+
+    public static Config get() {
+        return CONFIG;
     }
 
     public String keycloakUrl() {

@@ -15,8 +15,6 @@ import java.security.SecureRandom;
 import java.security.UnrecoverableKeyException;
 import java.security.cert.CertificateException;
 
-import static srpr.grpc.twitter.Config.CONFIG;
-
 public class Tls {
     private static final String KEYSTORE_TYPE = "PKCS12";
     private static final TrustManagerFactory TRUST_MANAGER_FACTORY;
@@ -47,15 +45,15 @@ public class Tls {
 
     private static TrustManagerFactory trustManagerFactory() throws NoSuchAlgorithmException, CertificateException, KeyStoreException, IOException {
         var trustManagerFactory = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
-        trustManagerFactory.init(loadKeyStoreFromResources(CONFIG.truststorePath(), CONFIG.truststorePass()));
+        trustManagerFactory.init(loadKeyStoreFromResources(Config.get().truststorePath(), Config.get().truststorePass()));
         return trustManagerFactory;
     }
 
     private static KeyManagerFactory keyManagerFactory() throws NoSuchAlgorithmException, CertificateException, KeyStoreException, IOException, UnrecoverableKeyException {
         var keyManagerFactory = KeyManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm());
         keyManagerFactory.init(
-                loadKeyStoreFromResources(CONFIG.keystorePath(), CONFIG.keystorePass()),
-                CONFIG.keystorePass().toCharArray());
+                loadKeyStoreFromResources(Config.get().keystorePath(), Config.get().keystorePass()),
+                Config.get().keystorePass().toCharArray());
         return keyManagerFactory;
     }
 

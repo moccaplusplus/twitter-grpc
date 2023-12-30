@@ -27,12 +27,11 @@ import static io.netty.handler.codec.http.HttpHeaderValues.APPLICATION_JSON;
 import static io.netty.handler.codec.http.HttpHeaderValues.APPLICATION_X_WWW_FORM_URLENCODED;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.stream.Collectors.joining;
-import static srpr.grpc.twitter.Config.CONFIG;
 
 public record Keycloak(URI uri, String clientId, String clientSecret) {
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
-    public static final Keycloak DEFAULT = new Keycloak(
-            URI.create(CONFIG.keycloakUrl()), CONFIG.keycloakClientId(), CONFIG.keycloakClientSecret());
+    private static final Keycloak DEFAULT = new Keycloak(
+            URI.create(Config.get().keycloakUrl()), Config.get().keycloakClientId(), Config.get().keycloakClientSecret());
     private static final HttpClient httpClient;
 
     static {
@@ -41,6 +40,10 @@ public record Keycloak(URI uri, String clientId, String clientSecret) {
         } catch (NoSuchAlgorithmException | KeyManagementException e) {
             throw new ExceptionInInitializerError(e);
         }
+    }
+
+    public static Keycloak getDefault() {
+        return DEFAULT;
     }
 
     @JsonIgnoreProperties(ignoreUnknown = true)

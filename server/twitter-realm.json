@@ -383,7 +383,7 @@
     "username" : "twitter",
     "enabled" : true,
     "totp" : false,
-    "emailVerified" : false,
+    "emailVerified" : true,
     "firstName" : "Twitter",
     "lastName" : "User",
     "email" : "twitter@twitter.grpc",
@@ -393,6 +393,52 @@
       "userLabel" : "My password",
       "createdDate" : 1703183297588,
       "secretData" : "{\"value\":\"8PL5oqEs3dhRWWRHPD9L7Tc1J1eqYTgtVkwAB+61y4Q=\",\"salt\":\"2ur88v+62jFJrSTu1o8K1A==\",\"additionalParameters\":{}}",
+      "credentialData" : "{\"hashIterations\":27500,\"algorithm\":\"pbkdf2-sha256\",\"additionalParameters\":{}}"
+    } ],
+    "disableableCredentialTypes" : [ ],
+    "requiredActions" : [ ],
+    "realmRoles" : [ "default-roles-twitter" ],
+    "notBefore" : 0,
+    "groups" : [ ]
+  }, {
+    "id" : "219c6db7-c5ca-4941-aeb5-d03161a2f0db",
+    "createdTimestamp" : 1703937698590,
+    "username" : "user1",
+    "enabled" : true,
+    "totp" : false,
+    "emailVerified" : true,
+    "firstName" : "First",
+    "lastName" : "User",
+    "email" : "user1@twitter.grpc",
+    "credentials" : [ {
+      "id" : "aab63dc7-6036-4a6b-bdd1-be5e449b58e9",
+      "type" : "password",
+      "userLabel" : "My password",
+      "createdDate" : 1703937712618,
+      "secretData" : "{\"value\":\"YeWNoyOthpM1LGnVBf+nrrpRH3bwXm67LG7R18EGNa0=\",\"salt\":\"HEV2zOE4g8jUUEonG4HYmg==\",\"additionalParameters\":{}}",
+      "credentialData" : "{\"hashIterations\":27500,\"algorithm\":\"pbkdf2-sha256\",\"additionalParameters\":{}}"
+    } ],
+    "disableableCredentialTypes" : [ ],
+    "requiredActions" : [ ],
+    "realmRoles" : [ "default-roles-twitter" ],
+    "notBefore" : 0,
+    "groups" : [ ]
+  }, {
+    "id" : "1d223508-61d7-4da6-b613-2bbcac93dc55",
+    "createdTimestamp" : 1703937757921,
+    "username" : "user2",
+    "enabled" : true,
+    "totp" : false,
+    "emailVerified" : true,
+    "firstName" : "Second",
+    "lastName" : "User",
+    "email" : "user2@twitter.grpc",
+    "credentials" : [ {
+      "id" : "6cd1f25c-edb7-4ae6-a42a-db6a0f8fcc57",
+      "type" : "password",
+      "userLabel" : "My password",
+      "createdDate" : 1703937770053,
+      "secretData" : "{\"value\":\"scuLnI5uhkw0lQmkXmJCkHPqrltVigkuVgGyavNq+/k=\",\"salt\":\"pXZP1TTJzM/R30M+nbBRMg==\",\"additionalParameters\":{}}",
       "credentialData" : "{\"hashIterations\":27500,\"algorithm\":\"pbkdf2-sha256\",\"additionalParameters\":{}}"
     } ],
     "disableableCredentialTypes" : [ ],
@@ -1173,7 +1219,7 @@
       "subType" : "authenticated",
       "subComponents" : { },
       "config" : {
-        "allowed-protocol-mapper-types" : [ "saml-user-attribute-mapper", "oidc-usermodel-attribute-mapper", "oidc-usermodel-property-mapper", "oidc-full-name-mapper", "oidc-address-mapper", "oidc-sha256-pairwise-sub-mapper", "saml-role-list-mapper", "saml-user-property-mapper" ]
+        "allowed-protocol-mapper-types" : [ "oidc-usermodel-attribute-mapper", "oidc-usermodel-property-mapper", "oidc-sha256-pairwise-sub-mapper", "oidc-full-name-mapper", "saml-role-list-mapper", "saml-user-attribute-mapper", "saml-user-property-mapper", "oidc-address-mapper" ]
       }
     }, {
       "id" : "ed4defdb-82fc-4cee-938f-21b7b966c5de",
@@ -1201,7 +1247,7 @@
       "subType" : "anonymous",
       "subComponents" : { },
       "config" : {
-        "allowed-protocol-mapper-types" : [ "saml-user-property-mapper", "saml-user-attribute-mapper", "oidc-address-mapper", "oidc-full-name-mapper", "oidc-usermodel-property-mapper", "oidc-sha256-pairwise-sub-mapper", "saml-role-list-mapper", "oidc-usermodel-attribute-mapper" ]
+        "allowed-protocol-mapper-types" : [ "saml-user-attribute-mapper", "oidc-usermodel-property-mapper", "oidc-usermodel-attribute-mapper", "saml-user-property-mapper", "oidc-address-mapper", "oidc-sha256-pairwise-sub-mapper", "oidc-full-name-mapper", "saml-role-list-mapper" ]
       }
     }, {
       "id" : "26fc2ca3-9bd2-4b8e-849d-71e9fd06a7e2",

@@ -28,15 +28,16 @@ public class LoginPanel extends BorderPane {
     private Label statusLabel;
     private final Consumer<Keycloak.Session> listener;
 
-    public LoginPanel(Consumer<Keycloak.Session> listener) {
+    public LoginPanel(String status, Consumer<Keycloak.Session> listener) {
         initComponent(this, LAYOUT);
         this.listener = listener;
         loginField.textProperty().addListener((observable, oldValue, newValue) -> onFieldEdit());
         passwdField.textProperty().addListener((observable, oldValue, newValue) -> onFieldEdit());
         loginButton.setOnAction(this::loginClicked);
         cancelButton.setOnAction(event -> listener.accept(null));
-        Utils.addTooltipIfClipped(statusLabel);
         onFieldEdit();
+        statusLabel.setText(status == null ? "" : status);
+        Utils.addTooltipIfClipped(statusLabel);
     }
 
     private void onFieldEdit() {
@@ -51,12 +52,12 @@ public class LoginPanel extends BorderPane {
         loginField.setDisable(true);
         passwdField.setDisable(true);
         Utils.runTask(
-                () -> Keycloak.DEFAULT.login(loginField.getText(), passwdField.getText()),
+                () -> Keycloak.getDefault().login(loginField.getText(), passwdField.getText()),
                 session -> {
                     statusLabel.setText("Login Success");
                     listener.accept(session);
                 },
-                e -> statusLabel.setText(("Login failed: " + e.getMessage()).trim()),
+                e -> statusLabel.setText("Login failed: " + e.getMessage()),
                 () -> {
                     cancelButton.setDisable(false);
                     loginField.setDisable(false);

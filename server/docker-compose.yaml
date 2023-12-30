@@ -15,7 +15,10 @@ services:
       retries: 5
       start_period: 40s
     volumes:
+      - ./user.json:/data/db/user.json
+      - ./twit.json:/data/db/twit.json
       - ./mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
+      - ./mongo-import.sh:/docker-entrypoint-initdb.d/mongo-import.sh:ro
 
   mongo-express:
     image: mongo-express
